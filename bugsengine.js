@@ -7,5 +7,8 @@
     theY: 0,
     theDirection: 0,
     theSpeed: 0,
+    doUpdate: () => {
+      // document.querySelector("#hive")
+    },
   }
 })()

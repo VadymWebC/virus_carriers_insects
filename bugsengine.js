@@ -8,7 +8,7 @@
     theDirection: 0,
     theSpeed: 0,
     theBugHTMLElement: null,
-    doUpdate: () => {
+    doCreate: () => {
       let theCanvas = document.querySelector('#hive')
       let theBugHTMLElement = (bug.theBugHTMLElement =
         document.createElement('div'))
@@ -18,8 +18,8 @@
       Object.assign(theBugHTMLElement, {
         className: 'bug',
         title: theName,
-        style: `top: ${Math.random() * 300 + 50}px;
-                 left: ${Math.random() * 300 + 50}px;
+        style: `top: ${(bug.theX = Math.random() * 300 + 50)}px;
+                 left: ${(bug.theY = Math.random() * 300 + 50)}px;
                  transform: rotate(${Math.random() * 360}deg)
                 `,
       })
@@ -27,7 +27,12 @@
       theCanvas.appendChild(theBugHTMLElement)
       //
     },
+    doUpdate: () => {
+      let = { theX, theY, theDirection, theSpeed, theBugHTMLElement } = bug
+      //
+    },
   }
 
-  bug.doUpdate()
+  bug.doCreate()
+  console.log(bug)
 })()

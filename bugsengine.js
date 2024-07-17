@@ -38,6 +38,13 @@
         theBugHTMLElement,
       } = bug
       let theTotalPath = 2 * Math.PI * theRadius
+      let theStep = theTotalPath / 1000
+
+      let theFrame = (theCurrentTimeStamp) => {
+        //
+      }
+
+      //requestAnimationFrame(callback)
     },
   }
 

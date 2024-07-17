@@ -6,6 +6,7 @@
     theX: 0,
     theY: 0,
     theDirection: 0,
+    theRadius: 8,
     theSpeed: 0,
     theBugHTMLElement: null,
     doCreate: () => {
@@ -28,8 +29,15 @@
       //
     },
     doUpdate: () => {
-      let = { theX, theY, theDirection, theSpeed, theBugHTMLElement } = bug
-      //
+      let = {
+        theX,
+        theY,
+        theDirection,
+        theSpeed,
+        theRadius,
+        theBugHTMLElement,
+      } = bug
+      let theTotalPath = 2 * Math.PI * theRadius
     },
   }
 

@@ -40,11 +40,14 @@
       let theTotalPath = 2 * Math.PI * theRadius
       let theStep = theTotalPath / 1000
 
+      let thePrevTimeStamp = document.timeline.currentTime
+
       let theFrame = (theCurrentTimeStamp) => {
-        //
+        thePrevTimeStamp = theCurrentTimeStamp
+        requestAnimationFrame(callback)
       }
 
-      //requestAnimationFrame(callback)
+      requestAnimationFrame(callback)
     },
   }
 

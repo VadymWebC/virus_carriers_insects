@@ -56,13 +56,13 @@
 
         theBugHTMLElement.style = `
           transform: translate(
-            ${theX + (theDirection ? theLocalX : -theLocalX)}px
+            ${theX + (theDirection ? theLocalX : theLocalX)}px
             , ${theY + (theDirection ? theLocalY : -theLocalY)}px
           )
-          rotate( ${theDirection ? theCurrentAngle : -theCurrentAngle}rad )
+          
         `
 
-        //
+        //rotate( ${theDirection ? theCurrentAngle : -theCurrentAngle}rad )
         theCurrentAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
 
         console.log(theCurrentAngle, theTotalPath)
@@ -71,7 +71,7 @@
 
         theCurrentAngle < theTotalPath
           ? requestAnimationFrame(doFrame)
-          : bug.doUpdate()
+          : (1, bug.doUpdate())
       }
       requestAnimationFrame(doFrame)
     },

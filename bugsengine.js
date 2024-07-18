@@ -5,7 +5,8 @@
     theName: '',
     theX: 0,
     theY: 0,
-    theDirection: 0,
+    theAngle: 0,
+    theDirection: 1,
     theRadius: 30,
     theSpeed: 0,
     theBugHTMLElement: null,
@@ -14,16 +15,17 @@
       let theBugHTMLElement = (bug.theBugHTMLElement =
         document.createElement('div'))
 
-      let { theName, theX, theY, theDirection } = bug
+      let { theName, theX, theY, theAngle } = bug
 
+      //Math.random() * 300
       Object.assign(theBugHTMLElement, {
         className: 'bug',
         title: theName,
         style: `                 
                  transform:
                  translate(
-                   ${(bug.theX = Math.random() * 300 + 50)}px
-                   , ${(bug.theY = Math.random() * 300 + 50)}px
+                   ${(bug.theX = 300 + 150)}px
+                   , ${(bug.theY = 300 + 150)}px
                  )
                  rotate(${Math.random() * 360}deg)
                 `,
@@ -33,24 +35,44 @@
       //
     },
     doUpdate: () => {
-      let { theX, theY, theDirection, theSpeed, theRadius, theBugHTMLElement } =
-        bug
+      let {
+        theX,
+        theY,
+        theAngle,
+        theDirection,
+        theSpeed,
+        theRadius,
+        theBugHTMLElement,
+      } = bug
       let theTotalPath = 2 * Math.PI
       let theStep = theTotalPath / 1000
       let thePrevTimeStamp = document.timeline.currentTime
       let theCurrentAngle = 0
+      theDirection = bug.theDirection ^= 1
       let doFrame = (theCurrentTimeStamp) => {
+        let theLocalX = Math.cos(theCurrentAngle) * theRadius
+        let theLocalY = Math.sin(theCurrentAngle) * theRadius
+
         theBugHTMLElement.style = `
           transform: translate(
-            ${theX + Math.cos(theCurrentAngle) * theRadius}px
-            , ${theY + Math.sin(theCurrentAngle) * theRadius}px
+            ${theX + (theDirection ? theLocalX : theLocalX)}px
+            , ${theY + (theDirection ? theLocalY : theLocalY)}px
           )
           rotate( ${theCurrentAngle}rad )
         `
-        theCurrentAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
-        thePrevTimeStamp = theCurrentTimeStamp
-        theCurrentAngle < theTotalPath && requestAnimationFrame(doFrame)
         //
+
+        theDirection
+          ? (theCurrentAngle +=
+              (theCurrentTimeStamp - thePrevTimeStamp) * theStep)
+          : (theCurrentAngle -=
+              (theCurrentTimeStamp - thePrevTimeStamp) * theStep)
+
+        thePrevTimeStamp = theCurrentTimeStamp
+
+        theCurrentAngle < theTotalPath
+          ? requestAnimationFrame(doFrame)
+          : bug.doUpdate()
       }
       requestAnimationFrame(doFrame)
     },

@@ -6,7 +6,7 @@
     theX: 0,
     theY: 0,
     theDirection: 0,
-    theRadius: 8,
+    theRadius: 30,
     theSpeed: 0,
     theBugHTMLElement: null,
     doCreate: () => {
@@ -19,9 +19,13 @@
       Object.assign(theBugHTMLElement, {
         className: 'bug',
         title: theName,
-        style: `top: ${(bug.theX = Math.random() * 300 + 50)}px;
-                 left: ${(bug.theY = Math.random() * 300 + 50)}px;
-                 transform: rotate(${Math.random() * 360}deg)
+        style: `                 
+                 transform:
+                 translate(
+                   ${(bug.theX = Math.random() * 300 + 50)}px
+                   , ${(bug.theY = Math.random() * 300 + 50)}px
+                 )
+                 rotate(${Math.random() * 360}deg)
                 `,
       })
 
@@ -29,28 +33,30 @@
       //
     },
     doUpdate: () => {
-      let = {
-        theX,
-        theY,
-        theDirection,
-        theSpeed,
-        theRadius,
-        theBugHTMLElement,
-      } = bug
-      let theTotalPath = 2 * Math.PI * theRadius
+      let { theX, theY, theDirection, theSpeed, theRadius, theBugHTMLElement } =
+        bug
+      let theTotalPath = 2 * Math.PI
       let theStep = theTotalPath / 1000
-
       let thePrevTimeStamp = document.timeline.currentTime
-
-      let theFrame = (theCurrentTimeStamp) => {
+      let theCurrentAngle = 0
+      let doFrame = (theCurrentTimeStamp) => {
+        theBugHTMLElement.style = `
+          transform: translate(
+            ${theX + Math.cos(theCurrentAngle) * theRadius}px
+            , ${theY + Math.sin(theCurrentAngle) * theRadius}px
+          )
+          rotate( ${theCurrentAngle}rad )
+        `
+        theCurrentAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
         thePrevTimeStamp = theCurrentTimeStamp
-        requestAnimationFrame(callback)
+        theCurrentAngle < theTotalPath && requestAnimationFrame(doFrame)
+        //
       }
-
-      requestAnimationFrame(callback)
+      requestAnimationFrame(doFrame)
     },
   }
 
   bug.doCreate()
+  bug.doUpdate()
   console.log(bug)
 })()

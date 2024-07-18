@@ -49,24 +49,23 @@
       let thePrevTimeStamp = document.timeline.currentTime
       let theCurrentAngle = 0
       theDirection = bug.theDirection ^= 1
+
       let doFrame = (theCurrentTimeStamp) => {
         let theLocalX = Math.cos(theCurrentAngle) * theRadius
         let theLocalY = Math.sin(theCurrentAngle) * theRadius
 
         theBugHTMLElement.style = `
           transform: translate(
-            ${theX + (theDirection ? theLocalX : theLocalX)}px
-            , ${theY + (theDirection ? theLocalY : theLocalY)}px
+            ${theX + (theDirection ? theLocalX : -theLocalX)}px
+            , ${theY + (theDirection ? theLocalY : -theLocalY)}px
           )
-          rotate( ${theCurrentAngle}rad )
+          rotate( ${theDirection ? theCurrentAngle : -theCurrentAngle}rad )
         `
-        //
 
-        theDirection
-          ? (theCurrentAngle +=
-              (theCurrentTimeStamp - thePrevTimeStamp) * theStep)
-          : (theCurrentAngle -=
-              (theCurrentTimeStamp - thePrevTimeStamp) * theStep)
+        //
+        theCurrentAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
+
+        console.log(theCurrentAngle, theTotalPath)
 
         thePrevTimeStamp = theCurrentTimeStamp
 

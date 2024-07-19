@@ -1,6 +1,9 @@
 ;(() => {
   'use strict'
 
+  //helpers
+  let doLog = console.log
+
   let doRandom = (theLimit) => Math.random() * theLimit
 
   let bug = {
@@ -61,7 +64,7 @@
       theDirection && ((theCurrentAngle = Math.PI), (theStep = -theStep))
 
       let doFrame = (theCurrentTimeStamp) => {
-        //console.log(thePrevTimeStamp, theCurrentTimeStamp)
+        console.log(thePrevTimeStamp, theCurrentTimeStamp, theNeedTooo)
 
         let theLocalX = Math.cos(theCurrentAngle) * theRadius
         let theLocalY = Math.sin(theCurrentAngle) * theRadius
@@ -89,7 +92,7 @@
         //
         theNeedTooo > theCurrentTimeStamp
           ? (1, requestAnimationFrame(doFrame))
-          : (1, (bug.theX += 2 * theRadius)) /*, bug.doUpdate()*/
+          : (1, (bug.theX += 2 * theRadius), bug.doUpdate())
       }
 
       requestAnimationFrame(doFrame)

@@ -1,6 +1,8 @@
 ;(() => {
   'use strict'
 
+  let doRandom = (theLimit) => Math.random() * theLimit
+
   let bug = {
     theName: '',
     theX: 0,
@@ -49,10 +51,14 @@
       } = bug
       let theTotalPath = 2 * Math.PI
       let theStep = theTotalPath / 1000
+      //
+
       let thePrevTimeStamp = document.timeline.currentTime
+      let theNeedTooo = doRandom(theTotalPath) * theStep + thePrevTimeStamp
       let theCurrentAngle = 0
+
       theDirection = bug.theDirection ^= 1
-      //theDirection || (theCurrentAngle = Math.PI)
+      theDirection && ((theCurrentAngle = Math.PI), (theStep = -theStep))
 
       let doFrame = (theCurrentTimeStamp) => {
         //console.log(thePrevTimeStamp, theCurrentTimeStamp)
@@ -75,14 +81,17 @@
         //rotate( ${theDirection ? theCurrentAngle : -theCurrentAngle}rad )
 
         theCurrentAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
-
         thePrevTimeStamp = theCurrentTimeStamp
 
-        theCurrentAngle < theTotalPath
+        //theNeedTooo
+        //theCurrentAngle < theTotalPath
+
+        //
+        theNeedTooo > theCurrentTimeStamp
           ? (1, requestAnimationFrame(doFrame))
-          : 1,
-          (bug.theX += 2 * theRadius) /*, bug.doUpdate()*/
+          : (1, (bug.theX += 2 * theRadius), bug.doUpdate())
       }
+
       requestAnimationFrame(doFrame)
     },
   }

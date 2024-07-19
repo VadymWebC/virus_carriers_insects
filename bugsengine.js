@@ -21,15 +21,18 @@
       Object.assign(theBugHTMLElement, {
         className: 'bug',
         title: theName,
-        style: `                 
+        style: ` 
+                 left: ${(bug.theX = 300 + 150)}px;
+                 top: ${(bug.theY = 300 + 150)}px;
                  transform:
                  translate(
                    ${(bug.theX = 300 + 150)}px
                    , ${(bug.theY = 300 + 150)}px
                  )
-                 rotate(${Math.random() * 360}deg)
+                 
                 `,
       })
+      //rotate(${Math.random() * 360}deg)
 
       theCanvas.appendChild(theBugHTMLElement)
       //
@@ -49,29 +52,36 @@
       let thePrevTimeStamp = document.timeline.currentTime
       let theCurrentAngle = 0
       theDirection = bug.theDirection ^= 1
+      //theDirection || (theCurrentAngle = Math.PI)
 
       let doFrame = (theCurrentTimeStamp) => {
+        //console.log(thePrevTimeStamp, theCurrentTimeStamp)
+
         let theLocalX = Math.cos(theCurrentAngle) * theRadius
         let theLocalY = Math.sin(theCurrentAngle) * theRadius
 
+        //${(bug.theX = 300 + 150)}px;
+        //${(bug.theY = 300 + 150)}px;
         theBugHTMLElement.style = `
+          left: ${bug.theX}px;
+          top: ${bug.theY}px;
           transform: translate(
-            ${theX + (theDirection ? theLocalX : theLocalX)}px
-            , ${theY + (theDirection ? theLocalY : -theLocalY)}px
+            ${theDirection ? theLocalX : theLocalX}px
+            , ${theDirection ? theLocalY : theLocalY}px
           )
           
         `
 
         //rotate( ${theDirection ? theCurrentAngle : -theCurrentAngle}rad )
-        theCurrentAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
 
-        console.log(theCurrentAngle, theTotalPath)
+        theCurrentAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
 
         thePrevTimeStamp = theCurrentTimeStamp
 
         theCurrentAngle < theTotalPath
-          ? requestAnimationFrame(doFrame)
-          : (1, bug.doUpdate())
+          ? (1, requestAnimationFrame(doFrame))
+          : 1,
+          (bug.theX += 2 * theRadius) /*, bug.doUpdate()*/
       }
       requestAnimationFrame(doFrame)
     },
@@ -79,5 +89,5 @@
 
   bug.doCreate()
   bug.doUpdate()
-  console.log(bug)
+  //console.log(bug)
 })()

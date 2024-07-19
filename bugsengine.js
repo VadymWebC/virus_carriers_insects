@@ -54,7 +54,7 @@
       } = bug
       let theTotalPath = 2 * Math.PI
       let theStep = theTotalPath / 1000
-      //
+      // some code
 
       let thePrevTimeStamp = document.timeline.currentTime
       let theNeedTooo = doRandom(theTotalPath) * theStep + thePrevTimeStamp

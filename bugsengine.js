@@ -89,7 +89,7 @@
         //
         theNeedTooo > theCurrentTimeStamp
           ? (1, requestAnimationFrame(doFrame))
-          : (1, (bug.theX += 2 * theRadius), bug.doUpdate())
+          : (1, (bug.theX += 2 * theRadius)) /*, bug.doUpdate()*/
       }
 
       requestAnimationFrame(doFrame)

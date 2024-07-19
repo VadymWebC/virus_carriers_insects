@@ -62,6 +62,30 @@
       theDirection = bug.theDirection ^= 1
       theDirection && ((theCurrentAngle = Math.PI), (theStep = -theStep))
 
+
+
+      //////////////////////////////////////////
+      this.theTimeTpPassDistance = (doRandom(340 * theSpeed) * 20)
+      this.theFaza = theFaza ^ 1
+      this.theLocalAngle = {
+        theFaza
+        ? (
+          ( this.theDirection = (theDirection += -180) )
+          , 90
+        )
+        : (
+          ( this.theDirection = (theDirection += 180) )
+          , 270
+        )
+      }
+
+      this.theLeftOrigin = this.theX - (theRadius * doSin(theDirection))
+      this.theTopOrigin = this.theY - (theRadius * doCos(theDirection))
+      //////////////////////////////////////////
+
+
+
+
       let doFrame = (theCurrentTimeStamp) => {
         console.log(thePrevTimeStamp, theCurrentTimeStamp, theNeedTooo)
 

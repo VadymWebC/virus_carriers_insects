@@ -52,21 +52,29 @@
         theRadius,
         theBugHTMLElement,
       } = bug
-      let theTotalPath = 2 * Math.PI
+      let thePI = Math.PI
+      let theTotalPath = 2 * thePI
       let theStep = theTotalPath / 1000
 
       let thePrevTimeStamp = document.timeline.currentTime
-      let theNeedTooo = doRandom(theTotalPath) * theStep + thePrevTimeStamp
+      
       let theCurrentAngle = 0
 
-      theDirection = bug.theDirection ^= 1
-      theDirection && ((theCurrentAngle = Math.PI), (theStep = -theStep))
+      
+      theDirection && ((theCurrentAngle = thePI), (theStep = -theStep))
 
 
 
       //////////////////////////////////////////
-      this.theTimeTpPassDistance = (doRandom(340 * theSpeed) * 20)
-      this.theFaza = theFaza ^ 1
+      //this.theTimeTpPassDistance = (doRandom(340 * theSpeed) * 20)
+
+      let theNeedToGo = doRandom(theTotalPath) * theStep + thePrevTimeStamp
+
+      //this.theFaza = theFaza ^ 1
+      (bug.theDirection = theDirection ^= 1)
+        ? theAngle -= thePI
+        : theAngle += thePI
+
       this.theLocalAngle = {
         theFaza
         ? (
@@ -87,7 +95,7 @@
 
 
       let doFrame = (theCurrentTimeStamp) => {
-        console.log(thePrevTimeStamp, theCurrentTimeStamp, theNeedTooo)
+        console.log(thePrevTimeStamp, theCurrentTimeStamp, theNeedToGo)
 
         let theLocalX = Math.cos(theCurrentAngle) * theRadius
         let theLocalY = Math.sin(theCurrentAngle) * theRadius
@@ -109,11 +117,11 @@
         theCurrentAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
         thePrevTimeStamp = theCurrentTimeStamp
 
-        //theNeedTooo
+        //theNeedToGo
         //theCurrentAngle < theTotalPath
 
         //
-        theNeedTooo > theCurrentTimeStamp
+        theNeedToGo > theCurrentTimeStamp
           ? (1, requestAnimationFrame(doFrame))
           : (1, (bug.theX += 2 * theRadius), bug.doUpdate())
       }

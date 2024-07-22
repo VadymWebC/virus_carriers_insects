@@ -14,7 +14,7 @@
     theX: 0,
     theY: 0,
     theAngle: 0,
-    theDirection: 1,
+    theDirection: 0,
     theRadius: 30,
     theSpeed: 0,
     theBugHTMLElement: null,
@@ -33,11 +33,7 @@
         style: `
                  left: ${(bug.theX = 300 + 150)}px;
                  top: ${(bug.theY = 300 + 150)}px;
-                 transform:
-                 translate(
-                   ${(bug.theX = 300 + 150)}px
-                   , ${(bug.theY = 300 + 150)}px
-                 )
+                 transform: translate(0px, 0px) rotate(0deg);
 
                 `,
       })
@@ -59,7 +55,7 @@
       } = bug
       let thePI = Math.PI
       let theTotalPath = 2 * thePI
-      let theStep = theTotalPath / 1000
+      let theStep = theTotalPath / 4000
 
       let thePrevTimeStamp = document.timeline.currentTime
 
@@ -76,8 +72,8 @@
 
       //this.theFaza = theFaza ^ 1
       ;(bug.theDirection = theDirection ^= 1)
-        ? (bug.theAngle = theAngle -= thePI)
-        : (bug.theAngle = ((theLocalAngle = 3 * thePI), (theAngle += thePI)))
+        ? (theAngle += thePI)
+        : ((theLocalAngle = 3 * thePI), (theAngle -= thePI))
 
       // this.theLocalAngle = {
       //   theFaza
@@ -100,7 +96,7 @@
 
         theAngle +=
           (theCurrentTimeStamp - thePrevTimeStamp) *
-          (theDirection ? -theStep : theStep)
+          (theDirection ? theStep : -theStep)
 
         thePrevTimeStamp = theCurrentTimeStamp
 
@@ -114,9 +110,9 @@
         theBugHTMLElement.style = `
           transform:
             translateX(${theLeftOrigin + theX}px)
-            translateY(${theLeftOrigin + theY}px)
+            translateY(${theTopOrigin + theY}px)
             translateZ(0)
-            rotate(${theLocalAngle - theAngle}rad)
+            rotate(${theAngle}rad)
           ;          
         `
 
@@ -128,6 +124,7 @@
         //theNeedToGo
         //theCurrentAngle < theTotalPath
 
+        bug.theAngle = theAngle
         //
         theNeedToGo > theCurrentTimeStamp
           ? (1, requestAnimationFrame(doFrame))

@@ -12,8 +12,8 @@
   let thePI = Math.PI
   let theTotalPath = 2 * thePI
   let theStep = theTotalPath / 700
-
-  let theNeedToGo = doRandom(theTotalPath * theStep) + thePrevTimeStamp
+  let theRandomLimit = theTotalPath / theStep
+  //let theNeedToGo = doRandom(theTotalPath / theStep) + thePrevTimeStamp
 
   let bug = {
     theName: '',
@@ -21,7 +21,7 @@
     theY: 0,
     theAngle: 0,
     theDirection: 0,
-    theRadius: 8,
+    theRadius: 10,
     theSpeed: 0,
     theBugHTMLElement: null,
     doCreate: () => {
@@ -62,11 +62,14 @@
 
       let thePrevTimeStamp = document.timeline.currentTime
 
-      //let theNeedToGo = doRandom(theTotalPath) / theStep + thePrevTimeStamp
+      let theNeedToGo =
+        (doRandom(theTotalPath) + 0.3488888888888889) / theStep +
+        thePrevTimeStamp
 
       let theLocalAngle = 0
 
-      ;(bug.theDirection = theDirection ^= 1)
+      //bug.theDirection = theDirection ^= 1
+      ;(bug.theDirection ^= 1)
         ? (theAngle += thePI)
         : ((theLocalAngle = thePI), (theAngle -= thePI), (theStep = -theStep))
 

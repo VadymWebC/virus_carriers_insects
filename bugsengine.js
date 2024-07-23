@@ -24,7 +24,7 @@
     theBugHTMLElement: null,
     doCreate: function () {
       let theCanvas = document.querySelector('#hive')
-      var theBugHTMLElement = (this.theBugHTMLElement =
+      let theBugHTMLElement = (this.theBugHTMLElement =
         document.createElement('div'))
 
       let { theName, theX, theY, theAngle } = this
@@ -101,13 +101,17 @@
     },
   }
 
-  var Bug = function (theName) {
+  let Bug = function (theName) {
     this.theName = theName
   }
 
   Bug.prototype = bug
 
-  var myNewBug = new Bug('first')
+  let myNewBug = new Bug('first')
   myNewBug.doCreate()
   myNewBug.doUpdate()
+
+  let myNewBug2 = new Bug('second')
+  myNewBug2.doCreate()
+  myNewBug2.doUpdate()
 })()

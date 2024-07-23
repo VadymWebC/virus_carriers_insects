@@ -24,9 +24,9 @@
     theRadius: 8,
     theSpeed: 0,
     theBugHTMLElement: null,
-    doCreate: () => {
+    doCreate: function () {
       let theCanvas = document.querySelector('#hive')
-      let theBugHTMLElement = (bug.theBugHTMLElement =
+      let theBugHTMLElement = (this.theBugHTMLElement =
         document.createElement('div'))
 
       let { theName, theX, theY, theAngle } = bug
@@ -37,8 +37,8 @@
         className: 'bug',
         title: theName,
         style: `
-                 left: ${(bug.theX = 300 + 150)}px;
-                 top: ${(bug.theY = 300 + 150)}px;
+                 left: ${(this.theX = 300 + 150)}px;
+                 top: ${(this.theY = 300 + 150)}px;
                  transform: translate(0px, 0px) rotate(0deg);
 
                 `,
@@ -47,7 +47,7 @@
       theCanvas.appendChild(theBugHTMLElement)
       //
     },
-    doUpdate: () => {
+    doUpdate: function () {
       let {
         theX,
         theY,
@@ -67,7 +67,7 @@
 
       let theLocalAngle = 0
 
-      ;(bug.theDirection ^= 1)
+      ;(this.theDirection ^= 1)
         ? (theAngle += thePI)
         : ((theLocalAngle = thePI),
           (theAngle -= thePI),
@@ -97,15 +97,21 @@
         theNeedToGo > theCurrentTimeStamp
           ? requestAnimationFrame(doFrame)
           : (1,
-            (bug.theX = theX),
-            (bug.theY = theY),
-            (bug.theAngle = theAngle),
-            bug.doUpdate())
+            (this.theX = theX),
+            (this.theY = theY),
+            (this.theAngle = theAngle),
+            this.doUpdate())
       }
 
       requestAnimationFrame(doFrame)
     },
   }
+
+  let Bug = function () {
+    //
+  }
+
+  Bug.prototype = bug
 
   bug.doCreate()
   bug.doUpdate()

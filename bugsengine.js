@@ -113,7 +113,7 @@
 
   Bug.prototype = bug
 
-  this.doCreate()
-  this.doUpdate()
+  bug.doCreate()
+  bug.doUpdate()
   //console.log(bug)
 })()

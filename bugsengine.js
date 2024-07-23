@@ -21,7 +21,7 @@
     theY: 0,
     theAngle: 0,
     theDirection: 0,
-    theRadius: 10,
+    theRadius: 8,
     theSpeed: 0,
     theBugHTMLElement: null,
     doCreate: () => {
@@ -44,8 +44,6 @@
                 `,
       })
 
-      //rotate(${Math.random() * 360}deg)
-
       theCanvas.appendChild(theBugHTMLElement)
       //
     },
@@ -60,25 +58,27 @@
         theBugHTMLElement,
       } = bug
 
+      let theLocalStep = theStep
+
       let thePrevTimeStamp = document.timeline.currentTime
 
       let theNeedToGo =
-        (doRandom(theTotalPath) + 0.3488888888888889) / theStep +
-        thePrevTimeStamp
+        (doRandom(theTotalPath) + thePI / 2) / theLocalStep + thePrevTimeStamp
 
       let theLocalAngle = 0
 
-      //bug.theDirection = theDirection ^= 1
       ;(bug.theDirection ^= 1)
         ? (theAngle += thePI)
-        : ((theLocalAngle = thePI), (theAngle -= thePI), (theStep = -theStep))
+        : ((theLocalAngle = thePI),
+          (theAngle -= thePI),
+          (theLocalStep = -theStep))
 
       let theLeftOrigin = theX - theRadius * doCos(theAngle)
       let theTopOrigin = theY - theRadius * doSin(theAngle)
       //////////////////////////////////////////
 
       let doFrame = (theCurrentTimeStamp) => {
-        theAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theStep
+        theAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theLocalStep
 
         thePrevTimeStamp = theCurrentTimeStamp
 
@@ -95,7 +95,7 @@
           ;          
         `
         theNeedToGo > theCurrentTimeStamp
-          ? (1, requestAnimationFrame(doFrame))
+          ? requestAnimationFrame(doFrame)
           : (1,
             (bug.theX = theX),
             (bug.theY = theY),

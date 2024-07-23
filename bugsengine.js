@@ -13,7 +13,35 @@
   let theTotalPath = 2 * thePI
   let theStep = theTotalPath / 700
 
-  let theHTMLVizualization = {}
+  let theHTMLVizualizator = {
+    theLayout: null,
+    theElementList: new Map(),
+    doCreate: function () {
+      let theLayout = (this.theLayout = document.createElement('div'))
+      Object.assign(theLayout, {
+        style: `
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        `,
+      })
+      document.body.append(theLayout)
+    },
+    doAddThing: function (theThing) {
+      let theThingHTMLElement = document.createElement('div')
+      //
+    },
+    doAdd: function (theThing) {
+      let { theElementList } = this
+      theElementList.has(theThing) && this.doAddThing(theThing)
+      theElementList.add(theThing, {})
+    },
+    doPaint: function () {
+      this.theElementList.forEach(() => {
+        //
+      })
+    },
+  }
 
   let bug = {
     theName: '',

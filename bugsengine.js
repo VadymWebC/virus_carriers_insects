@@ -15,7 +15,7 @@
     theY: 0,
     theAngle: 0,
     theDirection: 0,
-    theRadius: 30,
+    theRadius: 8,
     theSpeed: 0,
     theBugHTMLElement: null,
     doCreate: () => {
@@ -55,37 +55,17 @@
       } = bug
       let thePI = Math.PI
       let theTotalPath = 2 * thePI
-      let theStep = theTotalPath / 4000
+      let theStep = theTotalPath / 700
 
       let thePrevTimeStamp = document.timeline.currentTime
 
-      //let theCurrentAngle = 0
-
-      //theDirection && ((theCurrentAngle = thePI), (theStep = -theStep))
-
-      //////////////////////////////////////////
-      //this.theTimeTpPassDistance = (doRandom(340 * theSpeed) * 20)
-
       let theNeedToGo = doRandom(theTotalPath) / theStep + thePrevTimeStamp
 
-      let theLocalAngle = thePI / 2
+      let theLocalAngle = 0
 
-      //this.theFaza = theFaza ^ 1
       ;(bug.theDirection = theDirection ^= 1)
         ? (theAngle += thePI)
-        : ((theLocalAngle = 3 * thePI), (theAngle -= thePI))
-
-      // this.theLocalAngle = {
-      //   theFaza
-      //   ? (
-      //     ( this.theDirection = (theDirection += -180) )
-      //     , 90
-      //   )
-      //   : (
-      //     ( this.theDirection = (theDirection += 180) )
-      //     , 270
-      //   )
-      // }
+        : ((theLocalAngle = thePI), (theAngle -= thePI))
 
       let theLeftOrigin = theX - theRadius * doCos(theAngle)
       let theTopOrigin = theY - theRadius * doSin(theAngle)
@@ -102,17 +82,18 @@
 
         // let theLocalX = Math.cos(theCurrentAngle) * theRadius
         // let theLocalY = Math.sin(theCurrentAngle) * theRadius
-        let theX = theRadius * doCos(theAngle)
-        let theY = theRadius * doSin(theAngle)
+        let theX
+        let theY
 
         //${(bug.theX = 300 + 150)}px;
         //${(bug.theY = 300 + 150)}px;
         theBugHTMLElement.style = `
           transform:
-            translateX(${theLeftOrigin + theX}px)
-            translateY(${theTopOrigin + theY}px)
+            translateX(${(theX =
+              theLeftOrigin + theRadius * doCos(theAngle))}px)
+            translateY(${(theY = theTopOrigin + theRadius * doSin(theAngle))}px)
             translateZ(0)
-            rotate(${theAngle}rad)
+            rotate(${theAngle - theLocalAngle}rad)
           ;          
         `
 
@@ -128,10 +109,7 @@
         //
         theNeedToGo > theCurrentTimeStamp
           ? (1, requestAnimationFrame(doFrame))
-          : (1,
-            (bug.theX = theX + theLeftOrigin),
-            (bug.theY = theY + theTopOrigin),
-            bug.doUpdate())
+          : (1, (bug.theX = theX), (bug.theY = theY), bug.doUpdate())
       }
 
       requestAnimationFrame(doFrame)

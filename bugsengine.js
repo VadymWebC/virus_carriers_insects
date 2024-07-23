@@ -12,8 +12,6 @@
   let thePI = Math.PI
   let theTotalPath = 2 * thePI
   let theStep = theTotalPath / 700
-  let theRandomLimit = theTotalPath / theStep
-  //let theNeedToGo = doRandom(theTotalPath / theStep) + thePrevTimeStamp
 
   let bug = {
     theName: '',
@@ -26,12 +24,10 @@
     theBugHTMLElement: null,
     doCreate: function () {
       let theCanvas = document.querySelector('#hive')
-      let theBugHTMLElement = (this.theBugHTMLElement =
+      var theBugHTMLElement = (this.theBugHTMLElement =
         document.createElement('div'))
 
-      let { theName, theX, theY, theAngle } = bug
-
-      //Math.random() * 300
+      let { theName, theX, theY, theAngle } = this
 
       Object.assign(theBugHTMLElement, {
         className: 'bug',
@@ -56,7 +52,7 @@
         theSpeed,
         theRadius,
         theBugHTMLElement,
-      } = bug
+      } = this
 
       let theLocalStep = theStep
 
@@ -82,9 +78,6 @@
 
         thePrevTimeStamp = theCurrentTimeStamp
 
-        let theX
-        let theY
-
         theBugHTMLElement.style = `
           transform:
             translateX(${(theX =
@@ -94,6 +87,7 @@
             rotate(${theAngle - theLocalAngle}rad)
           ;          
         `
+
         theNeedToGo > theCurrentTimeStamp
           ? requestAnimationFrame(doFrame)
           : (1,
@@ -107,13 +101,13 @@
     },
   }
 
-  let Bug = function () {
-    //
+  var Bug = function (theName) {
+    this.theName = theName
   }
 
   Bug.prototype = bug
 
-  bug.doCreate()
-  bug.doUpdate()
-  //console.log(bug)
+  var myNewBug = new Bug('first')
+  myNewBug.doCreate()
+  myNewBug.doUpdate()
 })()

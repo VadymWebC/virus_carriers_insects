@@ -13,6 +13,8 @@
   let theTotalPath = 2 * thePI
   let theStep = theTotalPath / 700
 
+  let theHTMLVizualization = {}
+
   let bug = {
     theName: '',
     theX: 0,

@@ -14,21 +14,33 @@
   let theStep = theTotalPath / 700
 
   let thePasserByRequestAnimationFrame = {
-    thePrevTimeStamp: 0,
+    _thePrevTimeStamp: 0,
     theSubscribersList: null,
+
+    get theSubscribersList() {
+      return this._thePrevTimeStamp
+    },
+
+    set theSubscribersList(theTimeStamp) {
+      this.theSubscribersList.reduce(
+        (theRes, doThing) => (doThing(theRes), theRes),
+        theTimeStamp - this._thePrevTimeStamp
+      )
+      this._thePrevTimeStamp = theTimeStamp
+    },
+
     doCreate: function () {
       //
     },
     doRun: function () {
       let doAnimationFrame = function (theTimeStamp) {
-        this.thePrevTimeStamp = theTimeStamp
         requestAnimationFrame(doAnimationFrame)
       }.bind(this)
 
       requestAnimationFrame(doAnimationFrame)
     },
-    doSubscribe: function () {
-      //
+    doSubscribe: function (doThing) {
+      this.theSubscribersList.push(doThing)
     },
   }
 

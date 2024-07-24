@@ -13,6 +13,25 @@
   let theTotalPath = 2 * thePI
   let theStep = theTotalPath / 700
 
+  let thePasserByRequestAnimationFrame = {
+    thePrevTimeStamp: 0,
+    theSubscribersList: null,
+    doCreate: function () {
+      //
+    },
+    doRun: function () {
+      let doAnimationFrame = function (theTimeStamp) {
+        this.thePrevTimeStamp = theTimeStamp
+        requestAnimationFrame(doAnimationFrame)
+      }.bind(this)
+
+      requestAnimationFrame(doAnimationFrame)
+    },
+    doSubscribe: function () {
+      //
+    },
+  }
+
   let theHTMLVizualizator = {
     theLayout: null,
     theElementList: new Map(),
@@ -30,27 +49,41 @@
     doAddThing: function (theThing) {
       let theThingHTMLElement = document.createElement('div')
       //
-      Object.assign(theBugHTMLElement, {
+      Object.assign(theThingHTMLElement, {
         className: 'bug',
-        title: theName,
+        title: theThing.theName,
         style: `
-                 left: ${(this.theX = 300 + 150)}px;
-                 top: ${(this.theY = 300 + 150)}px;
+                 left: ${theThing.theX}px;
+                 top: ${theThing.theY}px;
                  transform: translate(0px, 0px) rotate(0deg);
 
                 `,
       })
 
       this.theLayout.appendChild(theThingHTMLElement)
+      return theThingHTMLElement
     },
     doAdd: function (theThing) {
       let { theElementList } = this
-      theElementList.has(theThing) && this.doAddThing(theThing)
-      theElementList.add(theThing, {})
+      theElementList.has(theThing) ||
+        theElementList.set(theThing, this.doAddThing(theThing))
+      //
     },
     doPaint: function () {
-      this.theElementList.forEach(() => {
-        //
+      //theThing.theX =
+      //theLeftOrigin + theRadius * doCos(theAngle)
+      //(theThing.theY =
+      //theTopOrigin + theRadius * doSin(theAngle))
+
+      this.theElementList.forEach((theThingHTMLElement, theThing) => {
+        theThingHTMLElement.style = `
+          transform:
+            translateX(${theThing.theX}px)
+            translateY(${theThing.theY}px)
+            translateZ(0)
+            rotate(${theThing.theDisplayAngle}rad)
+          ;          
+        `
       })
     },
   }
@@ -60,17 +93,16 @@
     theX: 0,
     theY: 0,
     theAngle: 0,
+    theDisplayAngle: 0,
     theDirection: 0,
     theRadius: 8,
     theSpeed: 0,
-    theBugHTMLElement: null,
+    // theBugHTMLElement: null,
     doCreate: function () {
-      let theCanvas = document.querySelector('#hive')
-      let theBugHTMLElement = (this.theBugHTMLElement =
-        document.createElement('div'))
-
-      let { theName, theX, theY, theAngle } = this
-
+      //let theCanvas = document.querySelector('#hive')
+      // let theBugHTMLElement = (this.theBugHTMLElement =
+      //   document.createElement('div'))
+      // let { theName, theX, theY, theAngle } = this
       //
     },
     doUpdate: function () {
@@ -108,40 +140,52 @@
 
         thePrevTimeStamp = theCurrentTimeStamp
 
-        theBugHTMLElement.style = `
-          transform:
-            translateX(${(theX =
-              theLeftOrigin + theRadius * doCos(theAngle))}px)
-            translateY(${(theY = theTopOrigin + theRadius * doSin(theAngle))}px)
-            translateZ(0)
-            rotate(${theAngle - theLocalAngle}rad)
-          ;          
-        `
+        this.theX = theLeftOrigin + theRadius * doCos(theAngle)
+        this.theY = theTopOrigin + theRadius * doSin(theAngle)
+        this.theAngle = theAngle
+        this.theDisplayAngle = theAngle - theLocalAngle
+        //rotate(${theAngle - theLocalAngle}rad)
 
-        theNeedToGo > theCurrentTimeStamp
-          ? requestAnimationFrame(doFrame)
-          : (1,
-            (this.theX = theX),
-            (this.theY = theY),
-            (this.theAngle = theAngle),
-            this.doUpdate())
+        // theBugHTMLElement.style = `
+        //   transform:
+        //     translateX(${(this.theX =
+        //       theLeftOrigin + theRadius * doCos(theAngle))}px)
+        //     translateY(${(this.theY = theTopOrigin + theRadius * doSin(theAngle))}px)
+        //     translateZ(0)
+        //     rotate(${theAngle - theLocalAngle}rad)
+        //   ;
+        // `
+
+        // theNeedToGo > theCurrentTimeStamp
+        //   ? requestAnimationFrame(doFrame)
+        //   : (1,
+        //     (this.theX = theX),
+        //     (this.theY = theY),
+        //     (this.theAngle = theAngle),
+        //     this.doUpdate())
       }
 
-      requestAnimationFrame(doFrame)
+      doFrame(thePrevTimeStamp + 10)
+      // requestAnimationFrame(doFrame)
     },
   }
 
   let Bug = function (theName) {
     this.theName = theName
+    this.theX = 400
+    this.theY = 400
   }
 
   Bug.prototype = bug
 
-  let myNewBug = new Bug('first')
-  myNewBug.doCreate()
-  myNewBug.doUpdate()
+  theHTMLVizualizator.doCreate()
 
-  let myNewBug2 = new Bug('second')
-  myNewBug2.doCreate()
-  myNewBug2.doUpdate()
+  let myNewBug = new Bug('first')
+  myNewBug.doUpdate()
+  theHTMLVizualizator.doAdd(myNewBug)
+  theHTMLVizualizator.doPaint()
+  // myNewBug.doCreate()
+
+  // let myNewBug2 = new Bug('second')
+  // myNewBug2.doUpdate()
 })()

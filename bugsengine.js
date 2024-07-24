@@ -30,6 +30,18 @@
     doAddThing: function (theThing) {
       let theThingHTMLElement = document.createElement('div')
       //
+      Object.assign(theBugHTMLElement, {
+        className: 'bug',
+        title: theName,
+        style: `
+                 left: ${(this.theX = 300 + 150)}px;
+                 top: ${(this.theY = 300 + 150)}px;
+                 transform: translate(0px, 0px) rotate(0deg);
+
+                `,
+      })
+
+      this.theLayout.appendChild(theThingHTMLElement)
     },
     doAdd: function (theThing) {
       let { theElementList } = this
@@ -59,18 +71,6 @@
 
       let { theName, theX, theY, theAngle } = this
 
-      Object.assign(theBugHTMLElement, {
-        className: 'bug',
-        title: theName,
-        style: `
-                 left: ${(this.theX = 300 + 150)}px;
-                 top: ${(this.theY = 300 + 150)}px;
-                 transform: translate(0px, 0px) rotate(0deg);
-
-                `,
-      })
-
-      theCanvas.appendChild(theBugHTMLElement)
       //
     },
     doUpdate: function () {

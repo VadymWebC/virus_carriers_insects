@@ -15,13 +15,13 @@
 
   let thePasserByRequestAnimationFrame = {
     _thePrevTimeStamp: 0,
-    theSubscribersList: null,
+    theSubscribersList: [],
 
-    get theSubscribersList() {
+    get thePrevTimeStamp() {
       return this._thePrevTimeStamp
     },
 
-    set theSubscribersList(theTimeStamp) {
+    set thePrevTimeStamp(theTimeStamp) {
       this.theSubscribersList.reduce(
         (theRes, doThing) => (doThing(theRes), theRes),
         theTimeStamp - this._thePrevTimeStamp
@@ -34,6 +34,7 @@
     },
     doRun: function () {
       let doAnimationFrame = function (theTimeStamp) {
+        this.thePrevTimeStamp = theTimeStamp
         requestAnimationFrame(doAnimationFrame)
       }.bind(this)
 
@@ -43,6 +44,9 @@
       this.theSubscribersList.push(doThing)
     },
   }
+
+  thePasserByRequestAnimationFrame.doRun()
+  //thePasserByRequestAnimationFrame.doSubscribe(console.log)
 
   let theHTMLVizualizator = {
     theLayout: null,

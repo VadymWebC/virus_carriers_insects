@@ -17,18 +17,6 @@
     _thePrevTimeStamp: 0,
     theSubscribersList: [],
 
-    get thePrevTimeStamp() {
-      return this._thePrevTimeStamp
-    },
-
-    set thePrevTimeStamp(theTimeStamp) {
-      this.theSubscribersList.reduce(
-        (theRes, doThing) => (doThing(theRes), theRes),
-        theTimeStamp - this._thePrevTimeStamp
-      )
-      this._thePrevTimeStamp = theTimeStamp
-    },
-
     doCreate: function () {
       //
     },
@@ -43,10 +31,19 @@
     doSubscribe: function (doThing) {
       this.theSubscribersList.push(doThing)
     },
-  }
 
-  thePasserByRequestAnimationFrame.doRun()
-  //thePasserByRequestAnimationFrame.doSubscribe(console.log)
+    get thePrevTimeStamp() {
+      return this._thePrevTimeStamp
+    },
+
+    set thePrevTimeStamp(theTimeStamp) {
+      this.theSubscribersList.reduce(
+        (theRes, doThing) => (doThing(theRes), theRes),
+        theTimeStamp - this._thePrevTimeStamp
+      )
+      this._thePrevTimeStamp = theTimeStamp
+    },
+  }
 
   let theHTMLVizualizator = {
     theLayout: null,
@@ -193,6 +190,12 @@
   }
 
   Bug.prototype = bug
+
+  // main
+
+  thePasserByRequestAnimationFrame.doCreate()
+  thePasserByRequestAnimationFrame.doRun()
+  // thePasserByRequestAnimationFrame.doSubscribe(console.log)
 
   theHTMLVizualizator.doCreate()
 

@@ -14,7 +14,7 @@
   let theStep = theTotalPath / 700
 
   let thePasserByRequestAnimationFrame = {
-    _thePrevTimeStamp: 0,
+    _thePrevTimeStamp: document.timeline.currentTime,
     theSubscribersList: [],
 
     doCreate: function () {
@@ -110,6 +110,7 @@
     theDirection: 0,
     theRadius: 8,
     theSpeed: 0,
+    theNeedToGo: 0,
     // theBugHTMLElement: null,
     doCreate: function () {
       //let theCanvas = document.querySelector('#hive')
@@ -118,7 +119,7 @@
       // let { theName, theX, theY, theAngle } = this
       //
     },
-    doUpdate: function () {
+    doUpdate: function (theCurrentTimeStamp) {
       let {
         theX,
         theY,
@@ -131,9 +132,7 @@
 
       let theLocalStep = theStep
 
-      let thePrevTimeStamp = document.timeline.currentTime
-
-      let theNeedToGo =
+      this.theNeedToGo =
         (doRandom(theTotalPath) + thePI / 2) / theLocalStep + thePrevTimeStamp
 
       let theLocalAngle = 0
@@ -144,42 +143,40 @@
           (theAngle -= thePI),
           (theLocalStep = -theStep))
 
+      //////////////////////////////////////////
+    },
+    doFrame: function (thePassedTimeStamp) {
       let theLeftOrigin = theX - theRadius * doCos(theAngle)
       let theTopOrigin = theY - theRadius * doSin(theAngle)
-      //////////////////////////////////////////
 
-      let doFrame = (theCurrentTimeStamp) => {
-        theAngle += (theCurrentTimeStamp - thePrevTimeStamp) * theLocalStep
+      theAngle += thePassedTimeStamp * theLocalStep
 
-        thePrevTimeStamp = theCurrentTimeStamp
+      thePrevTimeStamp = theCurrentTimeStamp
 
-        this.theX = theLeftOrigin + theRadius * doCos(theAngle)
-        this.theY = theTopOrigin + theRadius * doSin(theAngle)
-        this.theAngle = theAngle
-        this.theDisplayAngle = theAngle - theLocalAngle
-        //rotate(${theAngle - theLocalAngle}rad)
+      this.theX = theLeftOrigin + theRadius * doCos(theAngle)
+      this.theY = theTopOrigin + theRadius * doSin(theAngle)
+      this.theAngle = theAngle
+      this.theDisplayAngle = theAngle - theLocalAngle
 
-        // theBugHTMLElement.style = `
-        //   transform:
-        //     translateX(${(this.theX =
-        //       theLeftOrigin + theRadius * doCos(theAngle))}px)
-        //     translateY(${(this.theY = theTopOrigin + theRadius * doSin(theAngle))}px)
-        //     translateZ(0)
-        //     rotate(${theAngle - theLocalAngle}rad)
-        //   ;
-        // `
+      this.theNeedToGo > thePassedTimeStamp
+        ? requestAnimationFrame(doFrame)
+        : (1,
+          (this.theX = theX),
+          (this.theY = theY),
+          (this.theAngle = theAngle),
+          this.doUpdate())
 
-        // theNeedToGo > theCurrentTimeStamp
-        //   ? requestAnimationFrame(doFrame)
-        //   : (1,
-        //     (this.theX = theX),
-        //     (this.theY = theY),
-        //     (this.theAngle = theAngle),
-        //     this.doUpdate())
-      }
+      //rotate(${theAngle - theLocalAngle}rad)
 
-      doFrame(thePrevTimeStamp + 10)
-      // requestAnimationFrame(doFrame)
+      // theBugHTMLElement.style = `
+      //   transform:
+      //     translateX(${(this.theX =
+      //       theLeftOrigin + theRadius * doCos(theAngle))}px)
+      //     translateY(${(this.theY = theTopOrigin + theRadius * doSin(theAngle))}px)
+      //     translateZ(0)
+      //     rotate(${theAngle - theLocalAngle}rad)
+      //   ;
+      // `
     },
   }
 

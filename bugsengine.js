@@ -4,7 +4,8 @@
   //helpers
   let doLog = console.log
 
-  let doRandom = (theLimit) => Math.random() * theLimit
+  let doRand = Math.random
+  let doRandom = (theLimit) => doRand() * theLimit
 
   let doSin = Math.sin
   let doCos = Math.cos
@@ -109,74 +110,40 @@
     theDisplayAngle: 0,
     theDirection: 0,
     theRadius: 8,
-    theSpeed: 0,
     theNeedToGo: 0,
-    // theBugHTMLElement: null,
-    doCreate: function () {
-      //let theCanvas = document.querySelector('#hive')
-      // let theBugHTMLElement = (this.theBugHTMLElement =
-      //   document.createElement('div'))
-      // let { theName, theX, theY, theAngle } = this
-      //
-    },
-    doUpdate: function (theCurrentTimeStamp) {
-      let {
-        theX,
-        theY,
-        theAngle,
-        theDirection,
-        theSpeed,
-        theRadius,
-        theBugHTMLElement,
-      } = this
+    theLeftOrigin: 0,
+    theTopOrigin: 0,
 
-      let theLocalStep = theStep
+    doCreate: function () {},
+    doUpdate: function () {
+      let { theRadius, theAngle } = this
+      let thePI = Math.PI
+      this.theNeedToGo = (doRandom(theTotalPath) + thePI / 2) / theStep
 
-      this.theNeedToGo =
-        (doRandom(theTotalPath) + thePI / 2) / theLocalStep + thePrevTimeStamp
-
-      let theLocalAngle = 0
-
-      ;(this.theDirection ^= 1)
-        ? (theAngle += thePI)
-        : ((theLocalAngle = thePI),
-          (theAngle -= thePI),
-          (theLocalStep = -theStep))
+      theAngle = this.theAngle += (this.theDirection ^= 1) ? thePI : -thePI
 
       //////////////////////////////////////////
+      this.theLeftOrigin = this.theX - theRadius * doCos(theAngle)
+      this.theTopOrigin = this.theY - theRadius * doSin(theAngle)
     },
     doFrame: function (thePassedTimeStamp) {
-      let theLeftOrigin = theX - theRadius * doCos(theAngle)
-      let theTopOrigin = theY - theRadius * doSin(theAngle)
+      let { theRadius, theAngle, theDirection, theNeedToGo } = this
 
-      theAngle += thePassedTimeStamp * theLocalStep
+      //(theNeedToGo < 0) && ()
 
-      thePrevTimeStamp = theCurrentTimeStamp
+      let theLocalStep, theLocalAngle
+      theDirection
+        ? ((theLocalAngle = 0), (theLocalStep = theStep))
+        : ((theLocalAngle = thePI), (theLocalStep = -theStep))
 
-      this.theX = theLeftOrigin + theRadius * doCos(theAngle)
-      this.theY = theTopOrigin + theRadius * doSin(theAngle)
-      this.theAngle = theAngle
+      this.theAngle = theAngle += thePassedTimeStamp * theLocalStep
+
+      //thePrevTimeStamp = theCurrentTimeStamp
+
+      this.theX = this.theLeftOrigin + theRadius * doCos(theAngle)
+      this.theY = this.theTopOrigin + theRadius * doSin(theAngle)
       this.theDisplayAngle = theAngle - theLocalAngle
-
-      this.theNeedToGo > thePassedTimeStamp
-        ? requestAnimationFrame(doFrame)
-        : (1,
-          (this.theX = theX),
-          (this.theY = theY),
-          (this.theAngle = theAngle),
-          this.doUpdate())
-
-      //rotate(${theAngle - theLocalAngle}rad)
-
-      // theBugHTMLElement.style = `
-      //   transform:
-      //     translateX(${(this.theX =
-      //       theLeftOrigin + theRadius * doCos(theAngle))}px)
-      //     translateY(${(this.theY = theTopOrigin + theRadius * doSin(theAngle))}px)
-      //     translateZ(0)
-      //     rotate(${theAngle - theLocalAngle}rad)
-      //   ;
-      // `
+      ;(this.theNeedToGo -= thePassedTimeStamp) < 0 && this.doUpdate()
     },
   }
 
@@ -189,17 +156,26 @@
   Bug.prototype = bug
 
   // main
+  theHTMLVizualizator.doCreate()
 
   thePasserByRequestAnimationFrame.doCreate()
   thePasserByRequestAnimationFrame.doRun()
   // thePasserByRequestAnimationFrame.doSubscribe(console.log)
 
-  theHTMLVizualizator.doCreate()
-
   let myNewBug = new Bug('first')
   myNewBug.doUpdate()
+
+  thePasserByRequestAnimationFrame.doSubscribe((theTimeStamp) => {
+    myNewBug.doFrame(theTimeStamp)
+  })
+
   theHTMLVizualizator.doAdd(myNewBug)
-  theHTMLVizualizator.doPaint()
+
+  thePasserByRequestAnimationFrame.doSubscribe(() => {
+    theHTMLVizualizator.doPaint()
+  })
+
+  //theHTMLVizualizator.doPaint()
   // myNewBug.doCreate()
 
   // let myNewBug2 = new Bug('second')

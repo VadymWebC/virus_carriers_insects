@@ -14,13 +14,13 @@
   let theTotalPath = 2 * thePI
   let theStep = theTotalPath / 700
 
-  let thePasserByRequestAnimationFrame = {
-    _thePrevTimeStamp: document.timeline.currentTime,
-    theSubscribersList: [],
+  let PasserByRequestAnimationFrame = function () {
+    ;(this._thePrevTimeStamp = document.timeline.currentTime),
+      (this.theSubscribersList = []),
+      this.doRun()
+  }
 
-    doCreate: function () {
-      //
-    },
+  PasserByRequestAnimationFrame.prototype = {
     doRun: function () {
       let doAnimationFrame = function (theTimeStamp) {
         this.thePrevTimeStamp = theTimeStamp
@@ -46,20 +46,22 @@
     },
   }
 
-  let theHTMLVizualizator = {
-    theLayout: null,
-    theElementList: new Map(),
-    doCreate: function () {
-      let theLayout = (this.theLayout = document.createElement('div'))
-      Object.assign(theLayout, {
-        style: `
+  let HTMLVizualizator = function () {
+    let theLayout = (this.theLayout = document.createElement('div'))
+    Object.assign(theLayout, {
+      style: `
           width: 100%;
           height: 100%;
           overflow: hidden;
         `,
-      })
-      document.body.append(theLayout)
-    },
+    })
+    document.body.append(theLayout)
+  }
+
+  HTMLVizualizator.prototype = {
+    theLayout: null,
+    theElementList: new Map(),
+
     doAddThing: function (theThing) {
       let theThingHTMLElement = document.createElement('div')
       //
@@ -120,8 +122,6 @@
       let thePI = Math.PI
       this.theNeedToGo = (doRandom(theTotalPath) + thePI / 2) / theStep
 
-      theAngle = this.theAngle += (this.theDirection ^= 1) ? thePI : -thePI
-
       //////////////////////////////////////////
       this.theLeftOrigin = this.theX - theRadius * doCos(theAngle)
       this.theTopOrigin = this.theY - theRadius * doSin(theAngle)
@@ -143,7 +143,9 @@
       this.theX = this.theLeftOrigin + theRadius * doCos(theAngle)
       this.theY = this.theTopOrigin + theRadius * doSin(theAngle)
       this.theDisplayAngle = theAngle - theLocalAngle
-      ;(this.theNeedToGo -= thePassedTimeStamp) < 0 && this.doUpdate()
+      ;(this.theNeedToGo -= thePassedTimeStamp) < 0 &&
+        ((this.theAngle += (this.theDirection ^= 1) ? thePI : -thePI),
+        this.doUpdate())
     },
   }
 
@@ -151,33 +153,33 @@
     this.theName = theName
     this.theX = 400
     this.theY = 400
+    this.doUpdate()
   }
 
   Bug.prototype = bug
 
   // main
-  theHTMLVizualizator.doCreate()
+  let theHTMLVizualizator = new HTMLVizualizator()
 
-  thePasserByRequestAnimationFrame.doCreate()
-  thePasserByRequestAnimationFrame.doRun()
-  // thePasserByRequestAnimationFrame.doSubscribe(console.log)
-
-  let myNewBug = new Bug('first')
-  myNewBug.doUpdate()
-
-  thePasserByRequestAnimationFrame.doSubscribe((theTimeStamp) => {
-    myNewBug.doFrame(theTimeStamp)
-  })
-
-  theHTMLVizualizator.doAdd(myNewBug)
+  let thePasserByRequestAnimationFrame = new PasserByRequestAnimationFrame()
 
   thePasserByRequestAnimationFrame.doSubscribe(() => {
     theHTMLVizualizator.doPaint()
   })
-
-  //theHTMLVizualizator.doPaint()
-  // myNewBug.doCreate()
-
-  // let myNewBug2 = new Bug('second')
-  // myNewBug2.doUpdate()
+  //
+  ;[
+    'name1',
+    'name2',
+    'name3',
+    'name1',
+    'name2',
+    'name3',
+    'name1',
+    'name2',
+    'name3',
+  ].forEach((theName) => {
+    let theBug = new Bug(theName)
+    theHTMLVizualizator.doAdd(theBug)
+    thePasserByRequestAnimationFrame.doSubscribe(theBug.doFrame.bind(theBug))
+  })
 })()

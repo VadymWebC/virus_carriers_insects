@@ -86,11 +86,6 @@
       //
     },
     doPaint: function () {
-      //theThing.theX =
-      //theLeftOrigin + theRadius * doCos(theAngle)
-      //(theThing.theY =
-      //theTopOrigin + theRadius * doSin(theAngle))
-
       this.theElementList.forEach((theThingHTMLElement, theThing) => {
         theThingHTMLElement.style = `
           transform:
@@ -129,16 +124,12 @@
     doFrame: function (thePassedTimeStamp) {
       let { theRadius, theAngle, theDirection, theNeedToGo } = this
 
-      //(theNeedToGo < 0) && ()
-
       let theLocalStep, theLocalAngle
       theDirection
         ? ((theLocalAngle = 0), (theLocalStep = theStep))
         : ((theLocalAngle = thePI), (theLocalStep = -theStep))
 
       this.theAngle = theAngle += thePassedTimeStamp * theLocalStep
-
-      //thePrevTimeStamp = theCurrentTimeStamp
 
       this.theX = this.theLeftOrigin + theRadius * doCos(theAngle)
       this.theY = this.theTopOrigin + theRadius * doSin(theAngle)
